@@ -1,0 +1,66 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User{
+  id String @id
+  email String @unique
+}
+
+model Event{
+  id String @id
+  title String
+  description String
+}
+
+model Order{
+  id String @id
+  userId String
+  price Float
+  Quantity Int
+  Side TradeSide
+  type OrderType
+  status OrderStatus
+  eventId String
+}
+
+model Trade {
+  id String @id @default(cuid())
+  buyPrice Float
+  sellPrice Float
+  buyQty Int
+  sellQty Int
+  buyerId String
+  sellerId String
+  buyerOrderId String
+  sellerOrderId String
+  createdAt DateTime @default(now())
+  eventId String
+}
+
+enum TradeSide {
+  YES
+  NO
+}
+
+enum OrderType {
+  BUY
+  SELL
+}
+
+enum OrderStatus {
+  LIVE
+  EXECUTED
+}
