@@ -33,13 +33,13 @@ export interface UserQuantities{
 }
 
 export interface OrderSchema {
+    userId: string
+    eventId: string
     side: "YES" | "NO"
     type: "BUY" | "SELL"
     price: number
     quantity: number
     status: "LIVE" | "EXECUTED"
-    userId: string
-    eventId: string
 }
 
 export interface Event {
