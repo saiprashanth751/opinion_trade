@@ -16,13 +16,13 @@ await redis.connect().then(() => {
 
 async function startArchiver() {
     const eventGroup = "event_streams";
-    const consumerName = "archiver_consumer";
+    const consumerName = "consume_archiver";
     let lastId = ">"
 
     while (true) {
         const message = await redis.xReadGroup(
             consumerName,
-            "archiver_consuler",
+            "archiver_consumer",
             [{ key: eventGroup, id: lastId }],
             { BLOCK: 0, COUNT: 1 }
         );

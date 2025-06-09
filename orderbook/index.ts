@@ -15,12 +15,16 @@ app.use("/v1/worker", orderRouter);
 
 async function processQueue(){
     while(true){
+
         const data = await redis2.brPop("engineQueue", 0);
+
         if(!data) continue;
         console.log(data);
+
         const {element} = data;
         const message = JSON.parse(element);
         console.log(message);
+        
         const {type} = message;
 
         switch(type){
