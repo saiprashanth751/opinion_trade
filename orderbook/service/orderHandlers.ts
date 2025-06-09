@@ -3,6 +3,7 @@ import {redis, startEngine} from "./redisClient"
 import { createId } from "@paralleldrive/cuid2";
 import { broadcastChannel } from "./redisClient";
 import { initializeOrder } from "./initialiseOrder";
+import {exit} from "./exit"
 
 export async function initiateOrder(message: any){
     const{responseId, userId, eventId, side, price, quantity} = message;
@@ -44,3 +45,31 @@ export async function initiateOrder(message: any){
     redis.publish("initiateOrder", data);
     return;
 }
+
+export const exitOrder = async (message: any) => {
+  const { userId, eventId, side, price, quantity, orderId, responseId } =
+    message;
+  if (
+    !userId ||
+    !eventId ||
+    !side ||
+    !price ||
+    !quantity ||
+    !inMemory_OrderId[orderId] ||
+    !responseId
+  ) {
+    const data = JSON.stringify({
+      responseId,
+      status: "FAILED",
+    });
+    redis.publish("orderExit", data);
+    return;
+  }
+  await exit(eventId, side, price, quantity, orderId, userId);
+  const data = JSON.stringify({
+    responseId,
+    status: "SUCCESS",
+  });
+  redis.publish("orderExit", data);
+  return;
+};
