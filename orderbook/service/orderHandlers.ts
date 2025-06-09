@@ -36,7 +36,7 @@ export async function initiateOrder(message: any){
     }
     await broadcastChannel("order_creation", orderData);
     console.log(inMemory_OrderId);
-    await initializeOrder(userId, eventId, orderId, side, price, quantity);
+    await initializeOrder(userId, eventId, side as "YES" | "NO", price, quantity, orderId);
     const data = JSON.stringify({
         responseId,
         status: "SUCCESS"
